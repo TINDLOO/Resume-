@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janamdin Mubarak Ho, Sardar Zeshan Nawab!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Bebas+Neue&family=Inter:wght@400&display=swap" rel="stylesheet">
+    <style>
+        /* Colors and Base Styles */
+        :root {
+            --primary-color: #f59e0b; 
+            --secondary-color: #ef4444; 
+            --background-color: #0f172a; 
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color); 
+            color: white;
+            transition: background-color 0.5s;
+            overflow-x: hidden; 
+        }
+
+        .stage-container {
+            /* Yeh main content area hai, jo har stage mein badalta hai */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            position: relative; 
+            z-index: 20; /* Yeh zaroori hai taaki content background effects ke upar rahe */
+        }
+
+        /* --- Continuous Fireworks and Gifts (Har Page par) --- */
+        .firework-background {
+            /* Yeh element app-container ke bahar hai aur pure screen par faila hua hai */
+            position: fixed; /* Screen par fixed rahega */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; 
+            z-index: 1; /* Background mein rahe */
+        }
+        
+        /* Chhote Gifts, jo halke motion mein float kar rahe hain */
+        .gift-floating {
+            position: absolute;
+            font-size: 1.8rem;
+            animation: float-and-fade 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes float-and-fade {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            80% { transform: translate(var(--float-x), var(--float-y)) rotate(var(--float-rotate)); opacity: 1; }
+            100% { transform: translate(var(--float-x-end), var(--float-y-end)) rotate(var(--float-rotate-end)); opacity: 0; }
+        }
+
+        /* Firework Particles ka explosion animation */
+        .firework-particle {
+            position: absolute;
+            transform: translate(-50%, -50%); /* Center the explosion point */
+        }
+
+        .firework-particle > div {
+            /* Particle styles, defined in JS */
+            transition: all 1s;
+        }
+
+        @keyframes particle-move {
+            to {
+                transform: translate(var(--dx), var(--dy));
+                opacity: 0;
+            }
+        }
+        
+        /* --- Stage 1: Typography --- */
+        .heavy-title {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 5px;
+            animation: text-glitch 0.3s ease-in-out infinite alternate;
+            background-image: linear-gradient(45deg, #fef08a, #f97316, #ef4444);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            z-index: 20; 
+        }
+        .heavy-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            text-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--secondary-color);
+            transform: scale(1.05);
+            z-index: 20;
+        }
+
+        @keyframes text-glitch {
+            0% { transform: skewX(0deg); text-shadow: 2px 2px #ef4444, -2px -2px #f59e0b; }
+            50% { transform: skewX(1deg); }
+            100% { transform: skewX(-1deg); text-shadow: -2px 2px #f59e0b, 2px -2px #ef4444; }
+        }
+
+        /* Gift Box CSS */
+        .gift-box { z-index: 20; }
+        .gift-box:hover { transform: scale(0.9); }
+        .open-lid .gift-box-lid { transform: translateY(-100px) rotate(10deg); }
+
+
+        /* --- Stage 2: Super Real-Looking Multi-Tier Cake --- */
+        .super-cake-container {
+            width: 400px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin-top: 50px;
+            z-index: 20; 
+            transform: scale(0.9); 
+            transform-origin: bottom center;
+        }
+
+        /* Cake stand */
+        .cake-stand {
+            width: 450px;
+            height: 30px;
+            background-color: #cccccc;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 -2px 5px rgba(255,255,255,0.3) inset;
+            position: absolute;
+            bottom: -15px; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5; 
+        }
+
+        /* Har layer (tier) ki styling */
+        .cake-tier {
+            position: relative;
+            height: 70px; 
+            margin-bottom: -15px; 
+            border-radius: 5px; 
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            border-bottom: 5px solid rgba(0,0,0,0.1); 
+        }
+
+        /* Tier Specific Styles (Jaisa aapne image mein dekha tha) */
+        .tier-5 { 
+            width: 120px;
+            height: 60px;
+            background-color: #f7cac9; /* Light Pink */
+            /* Using a subtle SVG pattern for texture */
+            background-image: url('data:image/svg+xml;utf8,<svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%23f0a5a4" /></svg>'); 
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            z-index: 50;
+            top: 20px; 
+        }
+        .tier-4 { 
+            width: 170px;
+            background-color: #ffe0b2; /* Peach */
+            background-image: url('data:image/svg+xml;utf8,<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="10" height="10" fill="none" stroke="%23ffc78d" stroke-width="1"/></svg>'); 
+            z-index: 40; 
+        }
+        .tier-3 { 
+            width: 240px;
+            background-color: #cddc39; /* Lime Green */
+            background-image: url('data:image/svg+xml;utf8,<svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 0 L15 7.5 L7.5 15 L0 7.5 Z" fill="%23aed581"/></svg>'); 
+            z-index: 30; 
+        }
+        .tier-2 { 
+            width: 310px;
+            background-color: #81c784; /* Light Green */
+            background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="8" stroke="%2366bb6a" stroke-width="2" fill="none"/></svg>'); 
+            z-index: 20; 
+        }
+        .tier-1 { 
+            width: 380px;
+            background-color: #4db6ac; /* Aqua Green */
+            background-image: url('data:image/svg+xml;utf8,<svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L25 0 L25 25 L0 25 Z" fill="none" stroke="%2326a69a" stroke-width="3"/></svg>'); 
+            border-radius: 0 0 40px 40px;
+            z-index: 10; 
+        }
+
+        /* Drip Icing (jaisa image mein tha) */
+        .cake-drip-icing {
+            position: absolute;
+            top: 60px; 
+            left: 0;
+            right: 0;
+            height: 10px;
+            background-color: #ffffff; 
+            border-radius: 50% / 100% 100% 0 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 60;
+        }
+        .tier-5 .cake-drip-icing { top: 50px; border-radius: 0; } 
+
+
+        /* Candles aur Flame */
+        .candle {
+            position: absolute;
+            z-index: 100;
+            width: 8px;
+            height: 35px;
+            background-color: #8b5cf6;
+            border-radius: 2px;
+            transform-origin: bottom;
+            transition: transform 0.3s ease-out;
+            top: 25px; 
+        }
+        .flame {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 15px;
+            background-color: #fcd34d;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 0 5px 3px #f59e0b;
+            transition: opacity 0.5s ease-out;
+            opacity: 1;
+        }
+        .flame.extinguished { opacity: 0; }
+        
+        /* Cake Cutting Lines */
+        .cut-line-segment {
+            position: absolute;
+            width: 4px;
+            background-color: transparent;
+            border-left: 4px dashed #991b1b;
+            opacity: 0;
+            transition: opacity 0.5s;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .cake-cut .cut-line-segment { opacity: 1; animation: cutAnimation 0.5s forwards; }
+        .cut-t1 { height: 70px; bottom: 0; z-index: 15; animation-delay: 0.1s !important; }
+        .cut-t2 { height: 70px; bottom: 60px; z-index: 25; animation-delay: 0.2s !important; }
+        .cut-t3 { height: 70px; bottom: 120px; z-index: 35; animation-delay: 0.3s !important; }
+        .cut-t4 { height: 70px; bottom: 180px; z-index: 45; animation-delay: 0.4s !important; }
+        .cut-t5 { height: 60px; bottom: 240px; z-index: 55; animation-delay: 0.5s !important; }
+
+
+        /* --- Stage 3: Animated Photos --- */
+        @keyframes photo-motion {
+            0% { transform: scale(1.0) rotate(-1deg); }
+            50% { transform: scale(1.03) rotate(1deg) translateX(5px); }
+            100% { transform: scale(1.0) rotate(0deg); }
+        }
+
+        .motion-photo {
+            animation: photo-motion 5s ease-in-out infinite alternate;
+        }
+        .photo-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+             gap: 20px;
+             width: 100%;
+             max-width: 1200px;
+             margin-bottom: 30px;
+        }
+        
+        /* Cartoons */
+        .baby-cartoon { animation: bounce 1s infinite alternate; z-index: 20; }
+        @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
+        
+        /* Footer Credit */
+        .footer-credit {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            margin-top: 30px;
+            padding: 10px;
+            color: #7dd3fc;
+            background-color: #1e3a8a;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(125, 211, 252, 0.5);
+            z-index: 20;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- CRITICAL FIX: Firework/Gift background is now a sibling of app-container, ensuring it is NEVER cleared -->
+    <div id="firework-bg" class="firework-background"></div>
+
+    <div id="app-container" class="stage-container">
+        <!-- Content will be loaded by JavaScript -->
+    </div>
+
+    <script>
+        let currentStage = 1;
+        
+        // firework-bg ko yahan select kiya gaya hai
+        const fireworkContainer = document.getElementById('firework-bg'); 
+
+        // --- Global Fireworks and Floating Gifts (Ab Har Page Par Chalega) ---
+        function createFirework(x, y) {
+            const firework = document.createElement('div');
+            firework.className = 'firework-particle absolute';
+            firework.style.left = `${x}vw`;
+            firework.style.top = `${y}vh`;
+            firework.style.zIndex = 0; 
+
+            fireworkContainer.appendChild(firework);
+
+            const particleCount = 20;
+            const colors = ['#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#f97316', '#a855f7']; 
+
+            for (let j = 0; j < particleCount; j++) {
+                const particle = document.createElement('div');
+                particle.style.width = '5px';
+                particle.style.height = '5px';
+                particle.style.borderRadius = '50%';
+                particle.style.position = 'absolute';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const angle = Math.random() * 2 * Math.PI;
+                const velocity = Math.random() * 80 + 30; 
+                const finalX = Math.cos(angle) * velocity;
+                const finalY = Math.sin(angle) * velocity;
+                
+                particle.style.setProperty('--dx', `${finalX}px`);
+                particle.style.setProperty('--dy', `${finalY}px`);
+                // Animation CSS mein define kiya gaya hai
+                particle.style.animation = 'particle-move 1s ease-out forwards';
+                
+                firework.appendChild(particle);
+            }
+
+            setTimeout(() => {
+                firework.remove();
+            }, 1000);
+        }
+        
+                function createFloatingGift() {
+            const gift = document.createElement('span');
+            gift.className = 'gift-floating';
+            gift.textContent = '🎁'; // Chota Gift emoji
+            gift.style.left = `${Math.random() * 100}vw`;
+            gift.style.top = `${100 + Math.random() * 20}vh`; // Screen ke neeche se shuru
+            gift.style.animationDelay = `${Math.random() * 4}s`; 
+            
+            // Random float properties for motion
+            gift.style.setProperty('--float-x', `${(Math.random() - 0.5) * 200}px`);
+            gift.style.setProperty('--float-y', `${-100 - Math.random() * 200}vh`); 
+            gift.style.setProperty('--float-x-end', `${(Math.random() - 0.5) * 300}px`);
+            gift.style.setProperty('--float-y-end', `${-150 - Math.random() * 200}vh`);
+            gift.style.setProperty('--float-rotate', `${(Math.random() - 0.5) * 180}deg`);
+            gift.style.setProperty('--float-rotate-end', `${(Math.random() - 0.5) * 360}deg`);
+
+            fireworkContainer.appendChild(gift);
+
+            setTimeout(() => {
+                gift.remove();
+            }, 8000); 
+        }
+
+        let fireworkInterval;
+        let giftInterval;
+
+        function startContinuousBackgroundEffects() {
+            // Agar pehle se chal rahe hain, toh rokne ki zarurat nahi, sirf clear karo
+            // Lekin safety ke liye:
+            clearInterval(fireworkInterval);
+            clearInterval(giftInterval);
+            fireworkContainer.innerHTML = ''; // Purane particles aur gifts hatao
+
+            // Har 1 second mein naya firework
+            fireworkInterval = setInterval(() => {
+                // Screen ke upar ke hisse mein patakhe phootenge
+                createFirework(Math.random() * 90 + 5, Math.random() * 40 + 5); 
+            }, 1000); 
+
+            // Har 1.5 second mein naya gift
+            giftInterval = setInterval(() => {
+                createFloatingGift();
+            }, 1500); 
+        }
+
+        // --- Stage 1: Landing and Gift Box ---
+        function renderStage1() {
+            startContinuousBackgroundEffects(); // Background effects shuru karo
+
+            const container = document.getElementById('app-container');
+            container.innerHTML = `
+                <h1 class="text-7xl md:text-9xl font-black mb-6 heavy-title">
+                    HAPPY BIRTHDAY 
+                </h1>
+                <h2 class="text-5xl md:text-7xl font-extrabold mb-12 heavy-name">
+                    SARDAR ZESHAN NAWAB
+                </h2>
+                
+                <div id="giftBox" class="gift-box transition-all hover:shadow-2xl active:scale-95 w-[250px] h-[250px] bg-red-600 rounded-xl relative cursor-pointer">
+                    <div class="gift-box-lid bg-yellow-400 h-[50px] absolute top-0 left-0 right-0 rounded-t-xl border-b-4 border-yellow-600 transition-transform duration-500"></div>
+                    <div class="gift-box-ribbon-v w-[40px] bg-red-800 absolute top-0 bottom-0 left-1/2 -translate-x-1/2"></div>
+                    <div class="gift-box-ribbon-h h-[40px] bg-red-800 absolute top-1/2 left-0 right-0 -translate-y-1/2"></div>
+                    <span class="gift-text font-serif text-2xl">Cake Katne Ke Liye Click Karein</span>
+                </div>
+
+                <p class="mt-8 text-xl text-gray-400 font-inter">Is shandaar box ko kholne ke liye click karein!</p>
+            `;
+
+            document.getElementById('giftBox').addEventListener('click', () => {
+                const box = document.getElementById('giftBox');
+                box.classList.add('open-lid');
+                setTimeout(() => {
+                    currentStage = 2;
+                    renderStage2();
+                }, 700);
+            });
+        }
+
+        // --- Stage 2: Super Real-Looking Multi-Tier Cake, Candles, and Cutting ---
+        function renderStage2() {
+            startContinuousBackgroundEffects(); // Background effects chalu rahenge
+
+            const container = document.getElementById('app-container');
+            container.innerHTML = `
+                <h2 class="text-4xl md:text-5xl font-bold mb-12 text-yellow-300 font-inter z-20">
+                    Apka Birthday Cake Taiyar Hai! 🥳🎉🎊🎺
+                </h2>
+                <div class="relative flex justify-center items-end h-[500px] w-full mb-10">
+                    <div id="cakeBody" class="super-cake-container">
+                        <div class="cake-stand"></div>
+                        
+                        <!-- Tier 5 (Top Tier) -->
+                        <div class="cake-tier tier-5 relative flex justify-center items-end">
+                            <!-- Candles will be placed here -->
+                            <div class="cake-drip-icing"></div>
+                        </div>
+                        
+                        <!-- Tier 4 -->
+                        <div class="cake-tier tier-4 relative">
+                            <div class="cake-drip-icing"></div>
+                        </div>
+                        
+                        <!-- Tier 3 -->
+                        <div class="cake-tier tier-3 relative">
+                            <div class="cake-drip-icing"></div>
+                        </div>
+                        
+                        <!-- Tier 2 -->
+                        <div class="cake-tier tier-2 relative">
+                            <div class="cake-drip-icing"></div>
+                        </div>
+                        
+                        <!-- Tier 1 (Bottom Tier) -->
+                        <div class="cake-tier tier-1 relative">
+                            <div class="cake-drip-icing"></div>
+                        </div>
+
+                        <!-- Cutting Segments -->
+                        <div id="cutLineT5" class="cut-line-segment cut-t5"></div>
+                        <div id="cutLineT4" class="cut-line-segment cut-t4"></div>
+                        <div id="cutLineT3" class="cut-line-segment cut-t3"></div>
+                        <div id="cutLineT2" class="cut-line-segment cut-t2"></div>
+                        <div id="cutLineT1" class="cut-line-segment cut-t1"></div>
+                    </div>
+                </div>
+                <div class="flex space-x-4 z-20">
+                    <button id="blowOutButton" class="px-6 py-3 bg-red-600 text-white font-semibold rounded-full shadow-lg hover:bg-red-700 transition duration-300 transform hover:scale-105">
+                        Mom Batti Bujhao 🌬️
+                    </button>
+                    <button id="cutCakeButton" class="px-6 py-3 bg-green-500 text-white font-semibold rounded-full shadow-lg hover:bg-green-600 transition duration-300 transform hover:scale-105 opacity-0" disabled>
+                        Cake Kato 🔪
+                    </button>
+                </div>
+                <p id="message" class="mt-6 text-xl text-gray-300 font-inter z-20">Pehle candles bujhaiye!</p>
+            `;
+
+            const cakeBody = document.getElementById('cakeBody');
+            const cutCakeButton = document.getElementById('cutCakeButton');
+            const blowOutButton = document.getElementById('blowOutButton');
+            const messageElement = document.getElementById('message');
+            const tier5 = container.querySelector('.tier-5'); 
+
+            // 5 Candles ki positions
+            const candlePositions = [18, 35, 50, 65, 82]; 
+            const candles = [];
+            
+            // Candles banana
+            candlePositions.forEach((pos) => {
+                const candleDiv = document.createElement('div');
+                candleDiv.className = 'candle absolute';
+                candleDiv.style.left = `${pos}%`;
+                candleDiv.style.marginLeft = '-4px'; 
+                
+                const flameDiv = document.createElement('div');
+                flameDiv.className = 'flame';
+                candleDiv.appendChild(flameDiv);
+                
+                tier5.appendChild(candleDiv); 
+                candles.push({ candle: candleDiv, flame: flameDiv });
+            });
+            
+            let candlesBlownOut = false;
+
+            // Candles bujhane ka event
+            blowOutButton.addEventListener('click', () => {
+                if (candlesBlownOut) return;
+
+                messageElement.textContent = "Ek Ek Karke Sab Mom Batti Bhuj Rahi Hain...";
+                blowOutButton.disabled = true;
+                blowOutButton.classList.add('opacity-50');
+
+                candles.forEach((c, index) => {
+                    setTimeout(() => {
+                        c.flame.classList.add('extinguished');
+                        c.candle.style.transform = 'scaleY(0.7)';
+                        if (index === candles.length - 1) {
+                            candlesBlownOut = true;
+                            messageElement.textContent = "Saari Mom Batti Bujh Gayi! Ab Cake Cutting Ki Baari.";
+                            cutCakeButton.disabled = false;
+                            cutCakeButton.classList.remove('opacity-0');
+                            cutCakeButton.classList.add('scale-100');
+                        }
+                    }, index * 500); 
+                });
+            });
+
+            // Cake katne ka event aur Stage 3 pe jana
+            cutCakeButton.addEventListener('click', () => {
+                if (!candlesBlownOut) return;
+                
+                cakeBody.classList.add('cake-cut');
+                messageElement.textContent = "Happy Birthday To You 🥳🥳🎉🎊🎉";
+                cutCakeButton.disabled = true;
+
+                ['T1', 'T2', 'T3', 'T4', 'T5'].forEach(id => {
+                    document.getElementById(`cutLine${id}`).style.opacity = 1;
+                });
+
+                setTimeout(() => {
+                    currentStage = 3;
+                    renderStage3();
+                }, 1500);
+            });
+        }
+
+
+        // --- Stage 3: Gallery, Patakhy, and Birthday Message ---
+        function renderStage3() {
+            startContinuousBackgroundEffects(); // Background effects chalu rahenge
+
+            const container = document.getElementById('app-container');
+            container.innerHTML = `
+                <h2 class="text-5xl font-black mb-4 heavy-title">
+                    Zeshan Bhai, Janamdin Bahut bohut Mubarak Ho 🥳
+                </h2>
+                <p class="text-2xl mb-12 text-white font-inter z-20">Happy Birthday Zeshan Bhai Allah Apko Hamesha Khush Rakhy Ameen</p>
+
+                
+                <div class="flex space-x-8 mb-12 z-20">
+                    <span class="baby-cartoon" style="color:#fcd34d">Happy Birthday 🎂 🎉</span>
+                    <span class="baby-cartoon" style="animation-delay: 0.2s; color:#34d399">🥳🎈</span>
+                    <span class="baby-cartoon" style="animation-delay: 0.4s; color:#93c5fd">🎁🎊</span>
+                    <span class="baby-cartoon" style="animation-delay: 0.6s; color:#f87171">🎂🎂</span>
+                </div>
+
+                
+             <div class="photo-grid z-20">
+
+    <!-- Image 1 -->
+    <div class="relative w-full aspect-square bg-gray-700 rounded-xl overflow-hidden shadow-2xl transform transition duration-300 border-4 border-yellow-400/50">
+        <img src="images/sardar1.jpg" 
+             alt="Sardar Zeshan Nawab Pic 1"
+             class="w-full h-full object-cover motion-photo"
+             style="animation-delay: 0.5s;">
+        <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center text-white font-bold text-lg opacity-0 hover:opacity-100 transition-opacity p-2 text-center font-inter">
+            Yaadgar Lamha 1
+        </div>
+    </div>
+
+    <!-- Image 2 -->
+    <div class="relative w-full aspect-square bg-gray-700 rounded-xl overflow-hidden shadow-2xl transform transition duration-300 border-4 border-yellow-400/50">
+        <img src="images/sardar2.jpg" 
+             alt="Sardar Zeshan Nawab Pic 2"
+             class="w-full h-full object-cover motion-photo"
+             style="animation-delay: 1s;">
+        <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center text-white font-bold text-lg opacity-0 hover:opacity-100 transition-opacity p-2 text-center font-inter">
+            Yaadgar Lamha 2
+        </div>
+    </div>
+
+    <!-- Image 3 -->
+    <div class="relative w-full aspect-square bg-gray-700 rounded-xl overflow-hidden shadow-2xl transform transition duration-300 border-4 border-yellow-400/50">
+        <img src="images/sardar3.jpg" 
+             alt="Sardar Zeshan Nawab Pic 3"
+             class="w-full h-full object-cover motion-photo"
+             style="animation-delay: 1.5s;">
+        <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center text-white font-bold text-lg opacity-0 hover:opacity-100 transition-opacity p-2 text-center font-inter">
+            Yaadgar Lamha 3
+        </div>
+    </div>
+
+    <!-- Image 4 -->
+    <div class="relative w-full aspect-square bg-gray-700 rounded-xl overflow-hidden shadow-2xl transform transition duration-300 border-4 border-yellow-400/50">
+        <img src="images/sardar4.jpg" 
+             alt="Sardar Zeshan Nawab Pic 4"
+             class="w-full h-full object-cover motion-photo"
+             style="animation-delay: 2s;">
+        <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center text-white font-bold text-lg opacity-0 hover:opacity-100 transition-opacity p-2 text-center font-inter">
+            Yaadgar Lamha 4
+        </div>
+    </div>
+
+</div>
+                
+                <div class="mt-16 max-w-4xl text-left bg-gray-800/50 p-8 rounded-2xl shadow-2xl border-l-8 border-yellow-500 z-20">
+                    <h3 class="text-3xl font-bold mb-4 text-yellow-300">Happy Birthday Jani:</h3>
+                    <p class="text-lg text-gray-200 leading-relaxed font-inter">
+                        Sardar Zeshan Nawab Janii, aapko janamdin ki dher saari shubhkamnayein! Yeh din aapki zindagi mein khushiyon ki roshni aur kamyabi ka naya raasta laye. Aapki mehnat, aapka jazba, aur aapka shaandaar andaaz hamesha qabil-e-tareef raha hai. Hum dua karte hain ki aane wala har saal aapke liye behtareen mauqe lekar aaye, aapke har khwab ko haqeeqat mein badal de, aur aapki har mushkil aasan ho jaye. Aapki sehat, daulat aur shohrat mein hamesha barkat ho. Muskurate rahiye, khush rahiye, aur duniya ko apni kamyabiyon se hairan karte rahiye. Yeh celebration sirf ek chota sa tohfa hai aapke azeem wajood ke liye! Janamdin Mubarak!
+                    </p>
+                </div>
+                
+                <p class="mt-12 text-xl text-gray-400 font-inter z-20">Happy Birthday Jani " Sardar Zeshan Nawab.</p>
+
+                
+                <div class="footer-credit z-20">
+                    Credit by Shazii
+                </div>
+            `;
+        }
+
+        // Application ko shuru karo
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStage1();
+        });
+        
+    </script>
+</body>
+</html>
